@@ -3,19 +3,14 @@ import Button from "../../../components/ui/Button";
 import { Field, Input, Select } from "../../../components/ui/Field";
 import Modal from "../../../components/ui/Modal";
 import form from "../../../components/ui/Form.module.css";
-import { useToast } from "../../../context/ToastContext";
-import { useData } from "../../../data/DataContext";
-import useBusy from "../../../hooks/useBusy";
+
 import { useState } from "react";
 import { createInterviewApi } from "../../../Api/HrApi/interviewApi";
 import { toast } from "react-toastify";
 export default function ScheduleInterviewModal({ applicant, onClose }) {
   const { t } = useTranslation("hr");
-  const { supervisors, scheduleInterview } = useData();
-  // const { toast } = useToast();
-  // const { run, isBusy } = useBusy();
   const [loading, setLoading] = useState(false);
-
+  
   const handleSubmit = async (e) => {
     setLoading(true)
     e.preventDefault();
@@ -40,17 +35,7 @@ export default function ScheduleInterviewModal({ applicant, onClose }) {
         onClose();
     }
 
-    // const data = new FormData(e.currentTarget);
-    // run("submit", async () => {
-    //   await scheduleInterview(applicant.id, {
-    //     supervisorId: Number(data.get("supervisorId")),
-    //     date: data.get("date"),
-    //     time: data.get("time"),
-    //     location: data.get("location"),
-    //   });
-    //   toast(t("applicants.toast.interviewScheduled"));
-      
-    // });
+
   };
 
   return (

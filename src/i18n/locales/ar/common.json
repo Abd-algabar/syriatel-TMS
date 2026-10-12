@@ -38,7 +38,10 @@
     "university": "الجامعة",
     "technicalSkills": "المهارات التقنية",
     "SubmissionDate": "تاريخ التقديم",
-    "note": "الملاحظات"
+    "note": "الملاحظات",
+    "rating":"التقيم",
+    "fire":"فصل"
+    
   },
   "language": { "switchTo": "English" },
   "role": {

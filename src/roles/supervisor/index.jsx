@@ -6,8 +6,8 @@ import {
 import AssignedRequestsPage from './pages/AssignedRequestsPage';
 // import AttendancePage from './pages/AttendancePage';
 // import DashboardPage from './pages/DashboardPage';
-// import InterviewsPage from './pages/InterviewsPage';
-// import TraineesPage from './pages/TraineesPage';
+import InterviewsPage from './pages/InterviewsPage';
+import TraineesPage from './pages/TraineesPage';
 // import EvaluationsPage from './pages/EvaluationsPage';
 
 /**
@@ -23,8 +23,8 @@ export const supervisorModule = {
   nav: [
     // { path: 'dashboard', icon: LayoutDashboard, labelKey: 'hr:nav.dashboard', Component: DashboardPage },
     { path: 'assigned-requests', icon: ListChecks, labelKey: 'hr:nav.assignedRequests', Component: AssignedRequestsPage },
-    // { path: 'interviews', icon: CalendarCheck, labelKey: 'hr:nav.interviews', Component: InterviewsPage },
-    // { path: 'trainees', icon: GraduationCap, labelKey: 'hr:nav.trainees', Component: TraineesPage },
+    { path: 'interviews', icon: CalendarCheck, labelKey: 'hr:nav.interviews', Component: InterviewsPage },
+    { path: 'trainees', icon: GraduationCap, labelKey: 'hr:nav.trainees', Component: TraineesPage },
     // { path: 'attendance', icon: ClipboardList, labelKey: 'hr:nav.attendance', Component: AttendancePage },
     // { path: 'announcements', icon: Megaphone, labelKey: 'hr:nav.announcements', Component: AnnouncementsPage },
     // { path: 'evaluations', icon: Star, labelKey: 'hr:nav.evaluations', Component: EvaluationsPage },

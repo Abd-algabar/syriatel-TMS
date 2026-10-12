@@ -38,7 +38,10 @@
     "university": "University",
     "technicalSkills": "Technical Skills",
     "SubmissionDate": "Submission Date",
-    "note":"Note"
+    "note":"Note",
+     "rating":"Rating",
+     "fire":"Fire"
+
   },
   "language": { "switchTo": "عربي" },
   "role": {

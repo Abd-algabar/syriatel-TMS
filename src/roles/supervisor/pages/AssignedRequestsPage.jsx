@@ -17,50 +17,64 @@ import { Check } from "lucide-react";
 import ScheduleInterviewModal from "../../hr/components/ScheduleInterviewModal";
 import { getMyAssignApi } from "../../../Api/SupervisorApi/assignedApi";
 import { X } from "lucide-react";
-
+import useAssigned from "../../../hooks/SupervisorHooks/useassigned";
 export default function AssignedRequestsPage() {
   const { t } = useTranslation("hr");
-  
 
-  const [applicant,setApplicant]=useState([])
-  const [actionLoading,setActionLoading]=useState("")
-  const [assigned,setAssigned]=useState([])
-  const [loading,setLoading]=useState(true)
+  const [applicant, setApplicant] = useState([]);
+  const [actionLoading, setActionLoading] = useState("");
+  const [assigned, setAssigned] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(null); // { type: 'details' | 'assign' | 'schedule', applicant }
 
+  const { error, loadingAction, TrainerAcceptOrRejectApplication } =
+    useAssigned();
 
+  const handelAcceptOrReject = async (id, type) => {
+    try {
+      const data = await TrainerAcceptOrRejectApplication(id, type);
+      toast.success(data.message);
+      await getMyApplicants(true)
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || "error in interview";
+      toast.error(message);
+    }
+  };
 
   const closeModal = () => {
     setModal(null);
   };
 
-  const getMyApplicants=async ()=>{
-      setLoading(true)
-    try {
-      const data= await getMyAssignApi()
-      console.log(data)
-      setAssigned(data.data)
+  const getMyApplicants = async (silent=false) => {
+    if (silent) {
 
-    } catch (error) {
-        console.log(error) 
-
-    }finally{
-      setLoading(false)
+    }else{
+    setLoading(true);
     }
-  }
+    try {
+      const data = await getMyAssignApi();
+      console.log(data);
+      setAssigned(data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  useEffect(()=>{
-    getMyApplicants()
-  },[])
+  useEffect(() => {
+    getMyApplicants();
+  }, []);
 
   const rows = assigned;
-  
+
   const handleViewDetails = async (a) => {
     setActionLoading(a.id);
     // console.log(id)
 
     // const data =await getApplicant (id);
-    setApplicant(a)
+    setApplicant(a);
     // console.log(data)
     setActionLoading(null);
     if (!a) {
@@ -72,14 +86,11 @@ export default function AssignedRequestsPage() {
     });
   };
 
-  
-
   const columns = [
     {
       key: "name",
       header: t("assigned.applicant"),
-      render: (a) => <strong className={styles.strong}>{a.full_name
-}</strong>,
+      render: (a) => <strong className={styles.strong}>{a.full_name}</strong>,
     },
     {
       key: "status",
@@ -89,72 +100,62 @@ export default function AssignedRequestsPage() {
     {
       key: "gpa",
       header: t("label.gpa", { ns: "common" }),
-      render: (a) => (
-        <span className={styles.accent}>
-          {a.gpa}
-        </span>
-      ),
+      render: (a) => <span className={styles.accent}>{a.gpa}</span>,
     },
     {
       key: "actions",
       header: t("label.actions", { ns: "common" }),
-      render: (a) =>   (
+      render: (a) => (
         <div className="flexCenter gap8 ">
+          <Button
+            size="sm"
+            loading={a.id == actionLoading}
+            onClick={() => handleViewDetails(a)}
+            variant=""
+          >
+            {t("action.viewDetails", { ns: "common" })}
+          </Button>
 
-        <Button
-          size="sm"
-          loading={a.id==actionLoading}
-          onClick={() => handleViewDetails(a)}
-          variant=""
-        >
-          {t("action.viewDetails",{ns:'common'})}
-        </Button>
+          <Button
+            size="sm"
+            loading={loadingAction==`accepted-${a.id}`}
+            variant="success"
+            onClick={() => { handelAcceptOrReject(a.id,"accepted") }}
+            icon={Check}
+          ></Button>
 
-        <Button
-        size="sm"
-        // loading
-        variant='success'
-        onClick={()=>{}}
-        icon={Check}
-        >
-        </Button>
-
-        <Button 
-        icon={X}
-        size="sm"
-        onClick={()=> {}}
-        // loading 
-        >
-
-        </Button>
-        
+          <Button
+            icon={X}
+            size="sm"
+            onClick={() => {handelAcceptOrReject(a.id,"rejected")}}
+            loading={loadingAction==`rejected-${a.id}`}
+          ></Button>
         </div>
-        
       ),
     },
   ];
 
   return loading ? (
     <Loading />
-  ) : (<>
-  
-    <Table columns={columns} rows={rows} emptyText={t("assigned.empty")} />
-    
-    {/* {modal?.type === "schedule" && applicant && (
+  ) : (
+    <>
+      <Table columns={columns} rows={rows} emptyText={t("assigned.empty")} />
+
+      {/* {modal?.type === "schedule" && applicant && (
             <ScheduleInterviewModal applicant={applicant} onClose={closeModal} />
           )} */}
-    
-    {modal?.type === "details" && applicant && (
-            <ApplicantDetailsModal
-              // applicant={modal.applicant}
-              applicant={applicant}
-              onClose={closeModal}
-              // onAssign={() => open("assign", modal.applicant)}
-              // onSchedule={() => open("schedule", modal.applicant)}
-              // onAssign={() => openModal("assign")}
-              onSchedule={() => openModal("schedule")}
-            />
-          )}
-  </>
+
+      {modal?.type === "details" && applicant && (
+        <ApplicantDetailsModal
+          // applicant={modal.applicant}
+          applicant={applicant}
+          onClose={closeModal}
+          // onAssign={() => open("assign", modal.applicant)}
+          // onSchedule={() => open("schedule", modal.applicant)}
+          // onAssign={() => openModal("assign")}
+          onSchedule={() => openModal("schedule")}
+        />
+      )}
+    </>
   );
 }
